@@ -24,8 +24,11 @@ You will need access to Docker to build and push the images for each service
  ```aws ecr get-login-password --region [your-region] | docker login --username AWS --password-stdin [aws_accountID].dkr.ecr.[your-region].amazonaws.com```
 
 Build and Tag Each Image
+<br>
+
 ```docker build -t posts .```
 <br>
+
 ```docker tag posts:latest [aws_accountID].dkr.ecr.us-east-1.amazonaws.com/posts:latest```
 
 
