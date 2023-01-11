@@ -83,7 +83,7 @@ Amazon Elastic Container Service (Amazon ECS) is a highly scalable, high perform
     "family": "[service-name]"
     } ```
     
-    --- Repeat the steps to create a task definition for each service
+--- Repeat the steps to create a task definition for each service
 
 5. Configure The Application Load Balancer: Target Groups (TG)
   - Navigate to the load balancer at the EC2 console of the https://console.aws.amazon.com/ec2/v2/home?#LoadBalancers:
@@ -94,7 +94,7 @@ Amazon Elastic Container Service (Amazon ECS) is a highly scalable, high perform
     Navigate to the Target Group section of the EC2 Console.
   - Select Create target group.
     Configure the following Target Group parameters (for the parameters not listed below, keep the default values):
-    For the Target group name, enter api.
+    For the Target group name, enter "main".
     For the Protocol, select HTTP.
     For the Port, enter 80.
     For the VPC, select the value that matches the one from the Load Balancer description. This is most likely NOT your default VPC.
@@ -104,6 +104,49 @@ Amazon Elastic Container Service (Amazon ECS) is a highly scalable, high perform
     For Timeout, enter 5.
     For Interval, enter 6.
     Select Create.
+
+--- Repeat same for all the other services OR
+    you can run this command
+    ``` aws elbv2 create-target-group --region [region] --name [service-name] --protocol HTTP --port 80 --vpc-id [vpc-attribute] --healthy-threshold-count 2 --unhealthy-threshold-count 2 --health-check-timeout-seconds 5 --health-check-interval-seconds 6 ```
+
+6. Create load balancer listeners
+   - Selete the load balancer created by the CloudFormation Stack
+   - Select the Listeners tab
+   -  Select Add listener and edit the following parameters as needed:
+        For Protocol:port, select HTTP and enter 80.
+        For Default action(s), select Forward to and in the Target group field, enter "main".
+        Select Save.
+   # ADD LISTENER
+   Update Listener Rules
+
+    There should only be one listener listed in this tab. Take the following steps to edit the listener rules:
+
+    Under the Rules column, select View/edit rules.
+    On the Rules page, select the plus (+) button.
+    The option to Insert Rule appears on the page. 
+    Use the following rule template to insert the necessary rules which include one to maintain traffic to the monolith and one for each microservice:
+    IF Path = /main/[service-name]* THEN Forward to [service-name]
+    For example: IF Path = /api/posts* THEN Forward to posts
+    Insert the rules in the following order:
+    api: /main* forwards to main
+    posts: /main/posts* forwards to posts
+    -- Repeat for other services
+    Select Save.
+
+7. Deploy The Application
+    -  Navigate to the Amazon ECS console and select Clusters from the left menu bar.
+    -  Select the cluster BreakTheMonolith-Demo, select the Services tab then select Create.
+    On the Configure service page, edit the following parameters (and keep the default values for parameters not listed below):
+    For the Launch type, select EC2.
+    For the Task Definition, select the Enter a value button to automatically select the highest revision value.
+    For example: api:1 
+    For the Service name, enter a service name (posts, threads, or users).
+    For the Number of tasks, enter 1
+
+8. Test
+    Copy the DNS of the Load Balancer
+    http://[DNS name]/main/posts
+
 
 
 
