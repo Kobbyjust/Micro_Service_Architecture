@@ -25,6 +25,7 @@ You will need access to Docker to build and push the images for each service
 
 Build and Tag Each Image
 ```docker build -t posts .```
+<br>
 ```docker tag posts:latest [aws_accountID].dkr.ecr.us-east-1.amazonaws.com/posts:latest```
 
 
