@@ -106,7 +106,7 @@ Amazon Elastic Container Service (Amazon ECS) is a highly scalable, high perform
     Select Create.
 
 --- Repeat same for all the other services OR
-    you can run this command
+    you can run this command <br>
     ``` aws elbv2 create-target-group --region [region] --name [service-name] --protocol HTTP --port 80 --vpc-id [vpc-attribute] --healthy-threshold-count 2 --unhealthy-threshold-count 2 --health-check-timeout-seconds 5 --health-check-interval-seconds 6 ```
 
 6. Create load balancer listeners
