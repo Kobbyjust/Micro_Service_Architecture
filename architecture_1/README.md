@@ -145,6 +145,7 @@ Amazon Elastic Container Service (Amazon ECS) is a highly scalable, high perform
 
 8. Test
     Copy the DNS of the Load Balancer
+    <br>
     http://[DNS name]/main/posts
 
 
